@@ -20,8 +20,8 @@ public class OrderItem {
   //  @ManyToOne
 //    @JoinColumn(name = "product_id", nullable = false)
 //    private Product product;
-    private String productId;
-  //  @ManyToOne
+    private Long productId;
+    @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
     private Integer quantity;
@@ -30,8 +30,4 @@ public class OrderItem {
     private LocalDateTime updatedAt;
 
 
-    public OrderItem(
-           // Product product,
-            Integer quantity, BigDecimal price, Order order, LocalDateTime createdAt, LocalDateTime updatedAt) {
-    }
 }

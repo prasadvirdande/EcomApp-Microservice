@@ -25,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
 //    private final USerRepository userRepository;
 
     @Override
-    public OrderResponse createOrder(String userId) {
+    public OrderResponse createOrder(Long userId) {
         List<CartItem> cartItems= cartService.getCart(userId);
         if(cartItems.isEmpty()){
 
@@ -39,18 +39,21 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         Order order=new Order();
-        order.setUserId(userId);
+        order.setUserId(String.valueOf(userId));
         order.setTotalAmount(totalAmount);
         order.setStatus(OrderStatus.CONFIRMED);
         List<OrderItem> orderItems = cartItems.stream()
                 .map(item -> {
                     OrderItem oi = new OrderItem();
-                    oi.setProductId(item.getProductId());
+                 //   oi.setProductId(item.getProductId());
                     oi.setQuantity(item.getQuantity());
-                    oi.setPrice(item.getPrice());
-                    oi.setOrder(order);
+                    oi.setPrice(BigDecimal.valueOf(100.00));
+                    oi.setProductId(item.getProductId());
+
+                   // order.getOrderItems().add(oi);
                     oi.setCreatedAt(item.getCreatedAt());
                     oi.setUpdatedAt(item.getUpdatedAt());
+                    oi.setOrder(order);
                     return oi;
                 })
                 .toList();
@@ -60,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItems(orderItems);
         Order save=orderRepository.save(order);
 
-        cartService.clearCart(userId);
+      //  cartService.clearCart(userId);
 
 
         return orderResponse(save);
@@ -74,12 +77,12 @@ public class OrderServiceImpl implements OrderService {
                 save.getOrderItems()
                         .stream()
                         .map(orderItem -> new OrderItemDTO(
-                                orderItem.getId(),                                   // id
-                                orderItem.getQuantity(),                             // quantity
-                                orderItem.getPrice(),                                // price
-                                orderItem.getProductId(),                      // productId
+                                orderItem.getId(),
+                                orderItem.getQuantity(),
+                                orderItem.getPrice(),
+                                String.valueOf(orderItem.getProductId()),
                                 orderItem.getPrice()
-                                        .multiply(BigDecimal.valueOf(orderItem.getQuantity())) // subtotal
+                                        .multiply(BigDecimal.valueOf(orderItem.getQuantity()))
                         ))
                         .toList(),
                 save.getCreatedAt()

@@ -20,7 +20,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createrOrder(@RequestHeader("X-User-Id") String userId) {
+    public ResponseEntity<OrderResponse> createrOrder(@RequestHeader("X-User-Id") Long userId) {
 
         OrderResponse order = orderService.createOrder(userId);
 

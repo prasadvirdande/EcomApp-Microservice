@@ -23,7 +23,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public void addProductToCart(String userId, CartRequest cartRequest) {
+    public void addProductToCart(Long userId, CartRequest cartRequest) {
 
 //        User user = userRepository.findById(Long.valueOf(userId))
 //                .orElseThrow(() -> new RuntimeException("User not found"));
@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
 //        Product product = productRepository.findById(cartRequest.getProductId())
 //                .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        CartItem existingItem = cartRepository.findByUserAndProductId(userId, cartRequest.getProductId());
+        CartItem existingItem = cartRepository.findByUserIdAndProductId(userId, Long.valueOf(cartRequest.getProductId()));
 
         if (existingItem != null) {
             existingItem.setQuantity((int) (existingItem.getQuantity()+cartRequest.getQuantity()));
@@ -43,7 +43,7 @@ public class CartServiceImpl implements CartService {
         } else {
             CartItem newItem = new CartItem();
             newItem.setUserId(userId);
-            newItem.setProductId(newItem.getProductId());
+           newItem.setProductId(Long.valueOf(cartRequest.getProductId()));
             newItem.setQuantity(Math.toIntExact(cartRequest.getQuantity()));
             newItem.setPrice(
                     BigDecimal.valueOf(100.00)
@@ -55,7 +55,7 @@ public class CartServiceImpl implements CartService {
 
     }
     @Override
-    public boolean deleteItemFromCart(String userId, String productId) {
+    public boolean deleteItemFromCart(Long userId, Long productId) {
 //        Optional<User> user = Optional.ofNullable(userRepository.findById(Long.valueOf(userId))
 //                .orElseThrow(() -> new RuntimeException("User not found")));
 //
@@ -68,7 +68,7 @@ public class CartServiceImpl implements CartService {
 //        return false;
 //
 //    }
-      CartItem cartItem=  cartRepository.deleteByUserAndProductId(userId, productId);
+      CartItem cartItem=  cartRepository.deleteByUserIdAndProductId(userId, productId);
       if(cartItem!=null){
           cartRepository.delete(cartItem);
           return true;
@@ -76,7 +76,7 @@ public class CartServiceImpl implements CartService {
         return false;
     }
     @Override
-    public List<CartItem> getCart(String userId) {
+    public List<CartItem> getCart(Long userId) {
 
 //        User user = userRepository.findById(Long.valueOf(userId))
 //                .orElseThrow(() -> new RuntimeException("User not found"));
@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public void clearCart(String userId) {
+    public void clearCart(Long userId) {
 
         cartRepository.deleteByUserId(userId);
 //        userRepository.findById(Long.valueOf(userId)).ifPresent(

@@ -21,15 +21,15 @@ public class CartController {
 
     @PostMapping
     public ResponseEntity<Void> addToCart(
-            @RequestHeader("X-User-ID") String userId,
+            @RequestHeader("X-User-ID") Long userId,
             @RequestBody CartRequest request) {
         cartService.addProductToCart(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     @DeleteMapping("/items/{productId}")
     public ResponseEntity<Void> removeFromCart(
-            @RequestHeader("X-User-ID") String userId,
-            @PathVariable String productId) {
+            @RequestHeader("X-User-ID") Long userId,
+            @PathVariable Long productId) {
         boolean deleted = cartService.deleteItemFromCart(userId, productId);
         return deleted ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
@@ -37,7 +37,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<List<CartItem>> getCart(
-            @RequestHeader("X-User-ID") String userId) {
+            @RequestHeader("X-User-ID") Long userId) {
         return ResponseEntity.ok(cartService.getCart(userId));
     }
 

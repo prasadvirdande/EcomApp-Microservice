@@ -8,12 +8,12 @@ import ecom_order.order.Model.CartItem;
 import java.util.List;
 
 public interface CartService   {
-  void addProductToCart(String userId, CartRequest cartRequest);
+  void addProductToCart(Long userId, CartRequest cartRequest);
 
 
-    boolean deleteItemFromCart(String userId, String productId);
+    boolean deleteItemFromCart(Long userId, Long productId);
 
-    List<CartItem> getCart(String userId);
+    List<CartItem> getCart(Long userId);
 
-    void clearCart(String userId);
+    void clearCart(Long userId);
 }

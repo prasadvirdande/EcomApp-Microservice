@@ -1,8 +1,9 @@
-package ecom_order.order.Model;
+package ecom_product.product.model;
 
-
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,33 +12,24 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "products")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CartItem {
-
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    @ManyToOne
-//    @JoinColumn(name = "user_id",nullable = false)
-//    private User user;
-    private Long userId;
-//    @ManyToOne
-//    @JoinColumn(name = "product_id", nullable = false)
-//    private Product product;
-
-   private Long productId;
-
-
-    private Integer quantity;
+    private String name;
+    private String description;
     private BigDecimal price;
+    private Integer stockQuantity;
+    private String category;
+    private String imageUrl;
+    private Boolean active = true;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
 }
