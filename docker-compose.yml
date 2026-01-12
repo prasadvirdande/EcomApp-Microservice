@@ -1,39 +1,37 @@
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql-ecom-micro
-    restart: always
+  postgres:
+    container_name: ecom-microservice
+    image: postgres:14
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ecommicro
-    ports:
-      - "3308:3306"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /data/postgres
     volumes:
-      - mysql_data:/var/lib/mysql
-
-  user-service:
-    build: ./user
-    container_name: user-service
-    depends_on:
-      - mysql
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommicro
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      - postgres:/data/postgres
     ports:
-      - "8085:8080"
-
-  product-service:
-    build: ./product
-    container_name: product-service
-    depends_on:
-      - mysql
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ecommicro
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
     ports:
-      - "8086:8080"
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
 
 volumes:
-  mysql_data:
+  postgres:
+  pgadmin:
